@@ -1,0 +1,7 @@
+# Minitest (c) 2011 Jamie Webb
+# MIT License
+
+target/
+lib_managed/
+src_managed/
+project/boot/

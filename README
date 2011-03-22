@@ -1,0 +1,105 @@
+Minitest
+https://github.com/jwebb/minitest/
+
+(c) 2011 Jamie Webb
+MIT License
+
+Contact: code at jwebb dot cc
+
+Minitest is a minimal JUnit wrapper which makes Scala unit tests more concise.
+It does this by using a lot of operators, but they are hopfully fairly
+memorable by similarity to the equivalent predicate operators, etc.  Minitest
+includes assertions and a simple mocking framework.
+
+Assertions take the form of operators ending with a question mark, with the
+value under test on the left and the expected value on the right (i.e. the
+reverse of JUnit, but the order we generally expect in spoken English).
+
+For reference types:
+
+  ==?   Deeply equal
+  !=?   Deeply unequal
+  ?     Not null
+  =~?   Regex matches
+
+For numeric types:
+
+  ==?   Equal (with implicit Epsilon for Floats/Doubles)
+  !=?   Unequal (also with epsilon)
+  <<?   Less than (double < required to avoid starting an XML fragment)
+  <=?   Less than or equal
+  >>?   Greater than
+  >=?   Greater than or equal
+
+For booleans:
+
+  ==?   Equal
+  !=?   Unequal
+  ??    Is true
+  !?    Is false
+
+
+Mocks are created like so:
+
+  val myMock = mock[MyClass]
+
+Method call declarations make use of 'method values', e.g.
+
+  myMock.someMethod _ -*> "Result"
+
+declares that all calls to someMethod with any arguments will return the string
+"Result". Additionally,
+
+  myMock.someMethod _ -#> "Once"
+  myMock.someMethod _ -#> "Twice"
+
+would declare that the first two calls will instead return "Once" and "Twice"
+respectively. Or to be more precise,
+
+  myMock.someMethod("Foo") -!> "Bar"
+
+declares that someMethod with the argument "Foo" (by deep equality) will
+instead return "Bar". Undeclared method calls will return null, 0 or false.
+
+After the test, mock usage can be verified with
+
+  Mock.verify(myMock)
+
+By default, verify is strict and fails if there were any undeclared method
+calls. It can be loosened to check calls only to certain methods:
+
+  Mock.verify(myMock, List(myMock.someMethod _, myMock.otherMethod _))
+
+Or made completely nice (thereby only positively checking that all the expected
+calls were made):
+
+  Mock.verify(myMock, Nil)
+
+For more control, the complete record of calls can be inspected using standard
+Scala operations on a list of Mock.Rec objects:
+
+  Mock.records(myMock).map(_.method.getName) ==?
+      List("someMethod", "someMethod", "otherMethod")
+
+Rec is defined as follows, where 'count' is the index of this call, out of all
+those made to the same proxy and method:
+
+  case class Rec(proxy : Object, method : Method, count : Int,
+      args : List[Any], result : Any)
+
+There is a shortcut for method names, so the above is equivalent to:
+
+  Mock.methodNames(myMock) ==?
+      List("someMethod", "someMethod", "otherMethod")
+
+Finally, method values can be inspected directly:
+
+  (myMock.someMethod _).count ==?
+      2
+
+Notice also that by convention the assertion operator always ends a line, so it
+is easy to spot.
+
+
+
+vim:ft=text:sw=2:et
