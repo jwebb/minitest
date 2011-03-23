@@ -19,7 +19,7 @@ package object minitest {
 	def need(b : Boolean) = org.junit.Assert.assertTrue(b)
 
 	/** Tests that the given thunk throws the given exception. Fails otherwise. */
-	def mustFail[T <: Throwable](thunk : => Unit)(implicit m : Manifest[T]) {
+	def mustThrow[T <: Throwable](thunk : => Unit)(implicit m : Manifest[T]) {
 		var failed = true
 		try {
 			thunk
@@ -35,6 +35,10 @@ package object minitest {
 
 	/** Creates a new mock of the given interface. */
 	def mock[T](implicit m : Manifest[T]) : T = Mock.mock[T](m)
+
+	/** Verifies the mock. */
+	def verify(proxy : Object, strict : Iterable[Mock.AnyRec] = null) =
+		Mock.verify(proxy, strict)
 
 	// Conveniently, Scala appears to automatically convert nulls into
 	// default primitives where required, so the below casts will work even for

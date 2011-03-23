@@ -15,7 +15,7 @@ class MockTest {
 		mockIterator.next _    -#> "First"
 		mockIterator.next _    -#> "Second"
 
-		mustFail[AssertionError] {
+		mustThrow[AssertionError] {
 			Mock.verify(mockIterator)
 			println("Here!")
 		}
@@ -44,7 +44,7 @@ class MockTest {
 		Mock.verify(mockIterator)
 
 		mockIterator.next
-		mustFail[AssertionError] {
+		mustThrow[AssertionError] {
 			Mock.verify(mockIterator)
 		}
 	}
@@ -76,11 +76,11 @@ class MockTest {
 				List(5, 5, 9, 23, 23)
 
 		// Check we didn't call toString, but be lenient otherwise
-		Mock.verify(mockSet, Set(mockSet.toString _))
+		verify(mockSet, Set(mockSet.toString _))
 
 		mockSet.toString  // Ok, now we did...
-		mustFail[AssertionError] {
-			Mock.verify(mockSet, Set(mockSet.toString _))
+		mustThrow[AssertionError] {
+			verify(mockSet, Set(mockSet.toString _))
 		}
 	}
 }

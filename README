@@ -6,10 +6,18 @@ MIT License
 
 Contact: code at jwebb dot cc
 
+
+
 Minitest is a minimal JUnit wrapper which makes Scala unit tests more concise.
 It does this by using a lot of operators, but they are hopfully fairly
 memorable by similarity to the equivalent predicate operators, etc.  Minitest
 includes assertions and a simple mocking framework.
+
+Everything required, including JUnit's @Test annotation, is imported with:
+
+  import cc.jwebb.minitest._
+
+
 
 Assertions take the form of operators ending with a question mark, with the
 value under test on the left and the expected value on the right (i.e. the
@@ -39,6 +47,7 @@ For booleans:
   !?    Is false
 
 
+
 Mocks are created like so:
 
   val myMock = mock[MyClass]
@@ -63,17 +72,17 @@ instead return "Bar". Undeclared method calls will return null, 0 or false.
 
 After the test, mock usage can be verified with
 
-  Mock.verify(myMock)
+  verify(myMock)
 
 By default, verify is strict and fails if there were any undeclared method
 calls. It can be loosened to check calls only to certain methods:
 
-  Mock.verify(myMock, List(myMock.someMethod _, myMock.otherMethod _))
+  verify(myMock, List(myMock.someMethod _, myMock.otherMethod _))
 
 Or made completely nice (thereby only positively checking that all the expected
 calls were made):
 
-  Mock.verify(myMock, Nil)
+  verify(myMock, Nil)
 
 For more control, the complete record of calls can be inspected using standard
 Scala operations on a list of Mock.Rec objects:
@@ -94,11 +103,7 @@ There is a shortcut for method names, so the above is equivalent to:
 
 Finally, method values can be inspected directly:
 
-  (myMock.someMethod _).count ==?
-      2
-
-Notice also that by convention the assertion operator always ends a line, so it
-is easy to spot.
+  (myMock.someMethod _).count ==? 2
 
 
 

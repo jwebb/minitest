@@ -7,7 +7,10 @@ import org.junit.Assert._
 
 /** Used as an implicit parameter to control the margin for error allowed in
  * floating point equality tests. */
-class Epsilon(val v : Double)
+class Epsilon(val v : Double) {
+	/** Default value. */
+	def this() = this(0.000000001)
+}
 
 /** Test assertions on Objects. */
 class TestObjectOps[T](me : T) {
