@@ -25,7 +25,7 @@ class TestObjectOps[T](me : T) {
 
 	/** Inequality test. */
 	def !=?(that : AnyRef) =
-		if (me != that)
+		if (me == that)
 			fail("Expected " + show(me) + " != " + show(that))
 
 	/** Non-null test. */
